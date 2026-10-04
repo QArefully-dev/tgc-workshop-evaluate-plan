@@ -43,7 +43,7 @@ Ignore token usage, example similarity, and producing `AGENTS.md` configuration.
 - **Current handling-guidance defect:** Earlier exploration found tiny PPE text and guidance available only to assistive technology. Require intended readable guidance; exact diagnosis, PPE items, or defect discovery unnecessary for full marks.
 - **Source-file inventories/exhaustive existing-test lists:** Brief explanation of E2E contribution sufficient. No points for naming guide files or copying prose.
 
-Prompt compliance -> separate: required headings in order (`Scenarios`, `Existing coverage`, `Risks`, `Approach`), at most four independent prioritized scenarios, at most 1500 words, required output path, plan-only changes, and no `Files to read` section. Permitted investigation is static code/test reading only: no browser interaction, application startup, test execution, installation, or reset; no subagents or user questions. Do not require a browser-unavailable note. Report execution violations only with evidence; plan text alone cannot prove one. No content-score deductions for compliance issues.
+Prompt compliance -> separate: required headings in order (`Scenarios`, `Existing coverage`, `Risks`, `Approach`), at most four independent prioritized scenarios, at most 2000 words, required output path, plan-only changes, and no `Files to read` section. Permitted investigation is static code/test reading only: no browser interaction, application startup, test execution, installation, or reset; no subagents or user questions. Do not require a browser-unavailable note. Report execution violations only with evidence; plan text alone cannot prove one. No content-score deductions for compliance issues.
 
 ## Example full-score plan: essential content
 
