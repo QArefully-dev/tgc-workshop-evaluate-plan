@@ -1,95 +1,93 @@
-# Custom Blend plan grading guide
+# QME-418 plan grading guide — v2 (2026-10-07)
 
-Grade QME-418 (`feature-ticket.md`) plans by proposed test coverage, not current application pass/fail. Example shows full-score coverage; equivalent scenarios, ordering, wording, and valid data earn same score.
+Grade `workshop/e2e-plan.md` against pinned `workshop/prompt.md` and `workshop/feature-ticket.md`. Score proposed browser coverage of AC1–AC5, not current application pass/fail. v2 scores cannot be compared with old-guide scores; regrade old artifacts under v2.
 
-## How to grade
+## Evidence and decision rules
 
-1. Read candidate plan once. Requirements reference -> ticket supplied to planner.
-2. Score each numbered check: **explicit coverage -> 5 points; otherwise -> 0**. Require all parts. Accept equivalent wording and shared setup; never infer missing assertions from scenario titles or AC labels.
-3. Cite short phrase or scenario number per check. Zero -> state missing/incorrect point. Count each check once, wherever covered.
-4. Accept combined or split coverage for content scoring. Lower-level tests justify omitting rule permutations; they cannot replace core browser journeys in checks 1–12. Apply the four-scenario limit only in prompt compliance.
-5. Use same rubric and repository revision across candidates. Consult static code and tests for disputed factual claims. Reference changed -> record difference; apply same correction across candidates.
-6. Report score, core gaps, and up to three improvements. Never rewrite plan. Record prompt compliance separately; no content-score impact.
+- Host records task-input SHA-256 for exact prompt, ticket, and guide; repository HEAD plus working-tree diff or saved source snapshot when dirty. Record candidate output SHA-256 separately. Record run ID, exact candidate model ID and reasoning effort, grader model ID and reasoning effort if distinct, tool access, budget, process trace, duration, tokens, and cost where known. Missing field -> `unknown`, never guessed. Compare runs with matching task inputs, repository state, rubric, and materially alike tool/budget conditions; candidate outputs and model configurations may differ as experiment variables. Disclose differences.
+- Per ID: `met` -> full listed weight; `missing/incorrect` -> 0. Cite scenario/short phrase or precise absence. Sum weights mechanically; no rounding, normalization, or inferred credit. Shared setup counts. Equivalent wording, data, scenario combinations, and ordering count. Score each distinct assertion independently: missing/unreachable evaluation-rejection recipe -> C19 only; S01/S02 cover otherwise present normal/correction data, and other AC4 assertions retain credit when explicitly planned. Missing restored base -> C25 only. Do not zero unrelated evidence or executable-scenario IDs solely for either gap.
+- Core gaps -> list missing C IDs regardless of total. Never infer behavior from AC labels or titles. Planned ticket assertion earns credit even when expected to fail in current code; exact defect diagnosis unnecessary, and current defect never substitutes for missing assertion. Lower-level tests justify omitting exhaustive variants, not representative browser coverage of an AC.
+- AC2: explicit no-reload assertion or visible in-place update counts; no navigation alone does not prove no reload. AC3: guidance must be visibly readable in summary; assistive-only or tiny text fails C18. AC4: rejection must follow evaluation of UI-constructible combination; disabled selection or invalid field entry alone fails C19.
+- Exact products, prices, fees, labels, error wording, and rejection recipe are not fixed answers. Static facts for calibration: generic per-ingredient ratio cap 50%; combined pigment cap 10%; material subtotal from summed, resolved per-component unit contributions × quantity, plus one flat blending fee. Evaluator may default to four 25 kg bags for minimum order; one bag cannot be assumed purchasable. Readable guidance remains required despite current code defect.
 
-Ignore token usage, example similarity, and producing `AGENTS.md` configuration. Workshop host records token usage separately. This workshop uses static code and test reading only; the planner designs browser E2E journeys without running them.
+## Content quality — 100 points
 
-## Scoring: 17 checks × 5 points = 85 raw points
+Each ID tests one observable assertion or planning requirement. C IDs -> core, 79 points. S IDs -> feasibility/evidence, 21 points. No fractional credit within ID.
 
-**Checks 1–12 -> required core coverage.** Report K/12 core checks met and list missing checks as core gaps regardless of total. Current defects never excuse omitted expected behaviour; planned assertions can be marked expected to fail. Normalize to 100 with **round(100 × raw points / 85)** to the nearest whole number.
+### AC1 — 20 points
 
-1. **AC1:** Guest reaches configurator; creates valid blend using base, at least one ingredient, and proportions.
-2. **AC1:** Adding -> exactly one cart line with chosen blend and visible total.
-3. **AC1:** After adding, journey checks the continue-shopping option and the checkout navigation control, including its destination. Do not complete checkout.
-4. **AC2:** Proportion changes -> updated material cost and blend total without reload.
-5. **AC2:** Summary checks blending fee and total calculation; never incorrectly requires flat fee changes with proportions.
-6. **AC3:** Food-compatible blend -> visible food classification in summary.
-7. **AC3:** Non-food blend -> visible non-food classification and readable handling guidance in summary.
-8. **AC4:** Concrete UI-permitted combination -> evaluation rejection with clear visible reason. Disabled ingredient/invalid input checks alone insufficient.
-9. **AC4:** Rejection -> adding blocked; cart unchanged.
-10. **AC4:** Rejected configuration retained -> corrected -> successfully added.
-11. **AC5:** Editing single blend restores base, ingredients, and proportions.
-12. **AC5:** Saving changed blend -> updated composition and price in same cart line; no duplicate.
-13. **Usable data:** Identify suitable materials, ratios, quantity, and locale/currency. Account for 25 kg bags and applicable minimum order; never assume one bag purchasable.
-14. **Independence:** Each scenario owns guest session and cart. No scenario dependencies or shared database resets during parallel tests.
-15. **Executable plan:** Include priorities, preparation, numbered user actions, observable expected results, and AC mappings. Shared preparation sufficient.
-16. **Focused E2E scope:** Representative browser journeys; avoid exhaustive rule/price/API matrix already covered below E2E. Assertions check visible UI; no test/application implementation supplied.
-17. **Evidence and uncertainty:** Distinguish facts checked in ticket/code/tests from assumptions; flag relevant differences. Do not invent browser observations.
+- C01 `2`: Guest reaches configurator from category navigation without login.
+- C02 `1`: Guest selects base material.
+- C03 `1`: Guest selects at least one ingredient.
+- C04 `2`: Guest sets valid proportions.
+- C05 `3`: Add produces exactly one blend cart line.
+- C31 `3`: Added cart line shows chosen base, ingredients, and proportions.
+- C06 `3`: Cart shows blend total.
+- C07 `2`: Continue-shopping option checked after add.
+- C08 `1`: Checkout option checked after add.
+- C09 `2`: Checkout option destination checked, without completing checkout.
 
-## Do not grade these as fixed answers
+### AC2 — 15 points
 
-- **Exact prices, fees, product labels, or error wording:** Depend on seed data and locale. Require clear price oracle -> controlled expected amounts or stated calculation, plus summary/cart consistency. “Price looks correct” insufficient. Numeric examples must be internally consistent.
-- **Exact rejection recipe:** Accept any verified, UI-constructible combination rejected by evaluation. Example -> combined pigment above 10%. Invented/unreachable failure fails check 8.
-- **Scenario count, P0/P1 labels, food/non-food materials:** Accept sensible risk ordering and equivalent valid coverage.
-- **Current handling-guidance defect:** Earlier exploration found tiny PPE text and guidance available only to assistive technology. Require intended readable guidance; exact diagnosis, PPE items, or defect discovery unnecessary for full marks.
-- **Source-file inventories/exhaustive existing-test lists:** Brief explanation of E2E contribution sufficient. No points for naming guide files or copying prose.
+- C10 `5`: Ratio change updates material cost in summary.
+- C11 `4`: Same change updates blend total in summary.
+- C12 `2`: Both updates occur without reload.
+- C13 `1`: Summary shows blending fee.
+- C14 `2`: Same change preserves flat blending fee.
+- C15 `1`: Summary and cart prices checked for consistency.
 
-Prompt compliance -> separate: required headings in order (`Scenarios`, `Existing coverage`, `Risks`, `Approach`), at most four independent prioritized scenarios, at most 2000 words, required output path, plan-only changes, and no `Files to read` section. Permitted investigation is static code/test reading only: no browser interaction, application startup, test execution, installation, or reset; no subagents or user questions. Do not require a browser-unavailable note. Report execution violations only with evidence; plan text alone cannot prove one. No content-score deductions for compliance issues.
+### AC3 — 13 points
 
-## Example full-score plan: essential content
+- C16 `4`: Food-compatible blend shows food classification in summary.
+- C17 `4`: Non-food blend shows non-food classification in summary.
+- C18 `5`: Non-food summary shows readable handling guidance.
 
-### Scenarios
+### AC4 — 19 points
 
-**Shared preparation:** Known workshop seed data, UK/GBP, no promotion, and four 25 kg bags where the minimum order requires them. Each scenario has its own guest session and empty cart. Use named seed constants; calculate expected material cost plus the configured flat blending fee. Plan waiting assertions for visible UI updates.
+- C19 `3`: Evaluation rejects concrete UI-permitted combination.
+- C20 `4`: Rejection shows clear visible reason.
+- C21 `3`: Rejected blend cannot be added.
+- C22 `3`: Cart remains unchanged after evaluated rejection; disabled Add plus unchanged cart counts without impossible click.
+- C23 `2`: Rejected configuration remains available for correction.
+- C24 `4`: Corrected configuration successfully adds blend.
 
-**1. Highest priority — create, reprice, and add a food blend (AC1–AC3).** Data: All-Purpose Flour with Cocoa material; cocoa 25%, then 20%.
+### AC5 — 12 points
 
-1. Guest opens Custom Blend from the category menu and selects materials and the initial ratio. Expect food classification and a summary with composition, material cost, blending fee, and total.
-2. Change cocoa to 20%. Without reload, expect 80/20 composition, recalculated material cost and total, unchanged flat fee, and total equal to materials plus fee.
-3. Add the blend. Expect a continue-shopping option and checkout control. Verify the checkout control targets the checkout route without proceeding through checkout. Continue shopping, then open the cart: exactly one blend line with chosen composition, four bags, and expected total.
+- C25 `2`: Edit restores original base.
+- C26 `2`: Edit restores original ingredients.
+- C27 `2`: Edit restores original proportions.
+- C28 `2`: Save replaces same cart line; no duplicate.
+- C29 `2`: Saved cart line shows changed composition.
+- C30 `2`: Saved cart line shows changed price.
 
-**2. Highest priority — rejection and recovery (AC4).** Data: Plaster of Paris with Titanium White pigment 6% and Iron Oxide Red pigment 5%.
+### Feasibility and evidence — 21 points
 
-1. Select both pigments and set ratios through available UI controls. Expect evaluation to explain that combined pigment exceeds the allowed limit.
-2. Expect adding to be blocked, the cart to remain empty, and the chosen materials and ratios to remain available for correction.
-3. Reduce Titanium White to 5%. Expect successful evaluation and addition of exactly one 90/5/5 blend line.
+- S01 `2`: Named materials support food, non-food, and correction journeys. Credit concrete repository-consistent fixture assumptions with uncertainty identified; known contradictory or unreachable normal/correction data fail. Rejection recipe belongs to C19.
+- S02 `2`: Ratios support otherwise present valid and correction states. Rejection recipe belongs to C19.
+- S03 `3`: Quantity states 25 kg bag basis and applicable minimum order; four-bag default accepted when stated.
+- S04 `2`: Country and currency stated for price expectations.
+- S05 `5`: Independent price oracle: `sum(resolved component unit contributions) × quantity + flat fee once`. Derive contributions independently from cited repository prices/proportions and applicable tier, rounding, and currency rules; controlled reproducible expected amounts count before UI observation. Summary/cart consistency alone insufficient; exhaustive matrix unnecessary.
+- S06 `2`: Each scenario owns guest session and cart; no order dependence.
+- S07 `2`: Each scenario has priority and brief risk rationale; order follows risk.
+- S08 `1`: Numbered user actions, visible expected results, and AC mapping make scenarios executable.
+- S09 `1`: Key code/ticket findings sourced; unverified assumptions and material ticket/code differences identified without invented browser observations.
+- S10 `1`: Relevant existing E2E/lower-level coverage summarized and representative browser contribution explained without exhaustive matrix.
 
-**3. Next priority — edit without duplication (AC5).** Data: a fresh cart with one flour/cocoa 75/25 blend.
+## Compliance — separate from quality
 
-1. Edit the blend. Expect original base, cocoa selection, and proportions restored.
-2. Change cocoa to 30%, wait for evaluation, and save.
-3. Expect exactly one cart line, updated 70/30 composition, recalculated price, and unchanged quantity.
+Report each rule `met`, `violated`, or `unknown`, with artifact or host trace evidence. Artifact proves format, not silent process compliance. Otherwise correct 1,600-word plan keeps same quality score but violates word limit. Missing trace -> affected process rule `unknown`, never `met`.
 
-**4. Next priority — non-food handling guidance (AC3).** Data: Plaster of Paris 90%, Titanium White pigment 5%, Iron Oxide Red pigment 5%.
+- Artifact rules: English; at most 1,500 words; exact required level-two headings in order (`Scenarios`, `Existing coverage`, `Risks`, `Approach`); at most four scenarios; required output path. Report ordinary format issues separately; no quality subtraction or automatic serious violation. Edits outside authorized path are process violations.
+- Process rules: static repository-file reading only; code plus directly relevant E2E and lower-level tests read; no external access, browser, app startup, test execution, dependency install, database reset, subagents, or user questions; no test/application implementation or unrelated edits. Host command/process trace verifies actions; host file diff/snapshot verifies actual file changes. Plan claims alone never establish file-change compliance.
+- Eligibility: verified serious violation of forbidden process or unauthorized edit -> `ineligible`, even when other evidence missing. Complete host evidence verifying all serious process constraints -> `eligible`. Otherwise -> `unknown`. Artifact quality remains reportable for every state; ordinary format violations reported separately.
 
-1. Configure the blend and wait for evaluation.
-2. Expect non-food classification and readable handling guidance in the summary. Assistive-only text does not establish visual readability; missing or unreadable guidance is a product defect.
+## Efficiency — separate from quality and compliance
 
-### Existing coverage
+Host logs only -> duration, tokens, cost where known. Missing metric -> `unknown`. Never infer from plan length or score. Low-token incomplete plan does not win automatically. No combined quality/compliance/efficiency score.
 
-Existing lower-level tests cover compatibility, percentage boundaries, price tiers, and API behavior. These E2E journeys check representative guest UI transitions and visible outcomes.
+## Grader output
 
-### Risks
-
-Recheck seeds and fee configuration before fixing numeric expectations. Four 25 kg bags satisfy the applicable minimum for these bases. Ratio changes leave the flat blending fee unchanged. The handling-guidance assertion may expose a current UI defect; preserve the intended assertion.
-
-### Approach
-
-Use the ticket and static code/test reading to verify data and existing coverage. Keep each journey in its own guest session and cart. Plan observable assertions for evaluation, summary, and cart updates. No browser observations or execution are claimed.
-
-## Grader response format
-
-- **Score:** N/100 (from R/85 raw points); K/12 core checks met.
-- **Evidence:** Short line per check -> number, 0 or 5, supporting scenario/quote or missing point.
-- **Core gaps:** Missing check numbers + brief descriptions, or “None”.
-- **Top improvements:** Up to three concrete changes; highest impact first.
-- **Separate notes:** Prompt compliance and unresolved factual uncertainty. No extra content deductions.
+- Provenance: guide version; separate task-input hashes (prompt, ticket, guide), repository revision/dirty diff or snapshot, and candidate-output hash; exact candidate model ID/reasoning effort, grader configuration if distinct, tool/budget/run metadata or `unknown`.
+- Quality: `N/100`; per-ID `met`/`missing` with weight and evidence; core gaps; up to three highest-impact improvements.
+- Compliance: per-rule status/evidence; serious violation and comparison eligibility.
+- Efficiency: host metrics or `unknown`; compare only like conditions.
