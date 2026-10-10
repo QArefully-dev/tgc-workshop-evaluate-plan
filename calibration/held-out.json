@@ -1,0 +1,44 @@
+{
+  "purpose": "Distinct author-reviewed probes reserved for future model validation, not used to tune model/rubric to a candidate score. Implementation tests exercise their declared decisions only. Expected answers hidden from fresh graders.",
+  "source_revision": "88bdafdf4855cae8acea65f536fa0e5f98c08f6e",
+  "source_facts": [
+    "Same source bounds/pricing anchors as development.json, supplied as source facts without development candidate texts/answers.",
+    "Options filter incompatible groups: customBlendRules.ts:42 food-grade accepts only food-grade. Field/selection blocking does not establish evaluated rejection.",
+    "Cleaner8340p,Laundry10740p,Titanium10740p; component unit contributions round separately before quantity. Four25kg bags no discount; one2500p fee."
+  ],
+  "cases": [
+    {
+      "name": "disabled_selection_is_not_rejection",
+      "candidate": "1. P1 AC4. Food Flour base; choose Cleaner ingredient5% (not offered by filtered ingredient list). Assert evaluation rejection reason, disabled Add, unchanged cart, retained draft; switch ingredient to Cornstarch5% and assert successful recovery.",
+      "expected": {"C19":"blocked","C20":"blocked","C21":"blocked","C22":"blocked","C23":"blocked","C24":"blocked"},
+      "rationale": "Initial ingredient cannot be selected; no evaluable rejection. Valid final recipe alone does not establish recovery from evaluated rejection.",
+      "failed_prerequisites": {"evaluable_rejection":"invalid_authored_setup"},
+      "defect_ids": []
+    },
+    {
+      "name": "independent_edit_survives_invalid_create",
+      "candidate": "1. Create Cleaner/Titanium75/25,four25kg; assert one added blend. 2. Separate guest/cart fixture with independently saved valid Laundry/Cleaner75/25,quantity4. Edit; assert original base,ingredient,ratios restored. Change60/40;save; assert same line replaced,no duplicate,changed composition and totalGBP416.20.",
+      "expected": {"C05":"blocked","C25":"met","C26":"met","C27":"met","C28":"met","C29":"met","C30":"met","S02":"incorrect"},
+      "rationale": "Invalid create does not contaminate independent admissible edit fixture. Edit assertions remain reachable; global ratio-evidence ID sees present invalid normal recipe.",
+      "failed_prerequisites": {"normal_admissible":"invalid_authored_setup"},
+      "defect_ids": []
+    },
+    {
+      "name": "material_rounding_error",
+      "candidate": "Cleaner88%,Laundry6%,Titanium6%; four25kg bags,UK GBP. Set these valid ratios. Oracle from catalog source prices:8340,10740,10740 pence. Sum raw weighted contributions8628p then multiply4 +2500 fee; expectGBP370.12. No component rounding.",
+      "expected": {"C04":"met","S02":"met","S05":"incorrect"},
+      "rationale": "Valid12% total ingredients/6% pigment. Component contributions7339.2,644.4,644.4 round to7339,644,644; material34508p,total37008p (GBP370.08). Missing material rounding changes result, so S05 fails.",
+      "failed_prerequisites": {},
+      "defect_ids": []
+    },
+    {
+      "name": "alternative_guidance_coverage",
+      "candidate": "1. Cleaner/Titanium75/25 invalid normal setup; assert readable summary guidance. 2. Independent Cleaner/Titanium90/10,four25kg bags;evaluate;assert readable material handling guidance in non-food summary despite current guidance defect.",
+      "expected": {"C18":"met"},
+      "rationale": "Alternative valid10% pigment scenario satisfies C18. Preserve blocked first instance evidence; one independent valid assertion suffices.",
+      "failed_prerequisites": {},
+      "defect_ids": ["C18"],
+      "extra_blocked_assertion": {"id":"C18","prerequisite":"nonfood_admissible"}
+    }
+  ]
+}
